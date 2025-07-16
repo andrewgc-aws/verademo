@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      # check file system
+      - ls -s
+      - cd app
+      # run SCA Agent
+      - curl -sSL https://download.sourceclear.com/ci.sh | sh
+      - mvn -B clean package
+  post_build:
+    commands:
+      # Download the Veracode API wrapper and submit the app for a Static Policy + SCA scan
+      - curl -O https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/23.3.11.1/vosp-api-wrappers-java-23.3.11.1.jar
+      - java -jar vosp-api-wrappers-java-23.3.11.1.jar -vid $VID -vkey $VKEY -appname VerademoAWS -action UploadAndScan -createprofile true -sandboxname AWS -createsandbox true -version $CODEBUILD_BUILD_ID -filepath target/verademo.war
+      # Login to the Veracode platform to see results. Visit here to more options - https://docs.veracode.com/r/r_wrapper_parameters
