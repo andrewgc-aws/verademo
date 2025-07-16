@@ -7,8 +7,8 @@ phases:
       - ls -s
       - cd app
       # run SCA Agent
-      - curl -sSL https://download.sourceclear.com/ci.sh | sh
-      - mvn -B clean package
+      - curl -sSL https://sca-downloads.veracode.com/ci.sh | sh
+      # - mvn -B clean package
   post_build:
     commands:
       # Download the Veracode API wrapper and submit the app for a Static Policy + SCA scan
